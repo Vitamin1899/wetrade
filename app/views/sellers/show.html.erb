@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @seller.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @seller.email %>
+</p>
+
+<p>
+  <strong>Password hash:</strong>
+  <%= @seller.password_hash %>
+</p>
+
+<p>
+  <strong>Firm:</strong>
+  <%= @seller.firm %>
+</p>
+
+<p>
+  <strong>Produce:</strong>
+  <%= @seller.produce %>
+</p>
+
+<p>
+  <strong>Produce price:</strong>
+  <%= @seller.produce_price %>
+</p>
+
+<p>
+  <strong>Wepay access token:</strong>
+  <%= @seller.wepay_access_token %>
+</p>
+
+<p>
+  <strong>Wepay account:</strong>
+  <%= @seller.wepay_account_id %>
+</p>
+
+<%= link_to 'Edit', edit_seller_path(@seller) %> |
+<%= link_to 'Back', sellers_path %>

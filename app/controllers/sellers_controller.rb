@@ -69,6 +69,6 @@ class SellersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def seller_params
-      params.require(:seller).permit(:name, :email, :password_hash, :firm, :produce, :produce_price, :wepay_access_token, :wepay_account_id)
+      params.require(:seller).permit(:name, :email, :password, :firm, :produce, :produce_price, :wepay_access_token, :wepay_account_id)
     end
 end

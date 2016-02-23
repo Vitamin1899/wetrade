@@ -17,11 +17,11 @@
   </div>
   <div class="field">
     <%= f.label :email %><br>
-    <%= f.text_field :email %>
+    <%= f.email_field :email %>
   </div>
   <div class="field">
-    <%= f.label :password_hash %><br>
-    <%= f.text_field :password_hash %>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
   </div>
   <div class="field">
     <%= f.label :firm %><br>
@@ -34,14 +34,6 @@
   <div class="field">
     <%= f.label :produce_price %><br>
     <%= f.number_field :produce_price %>
-  </div>
-  <div class="field">
-    <%= f.label :wepay_access_token %><br>
-    <%= f.text_field :wepay_access_token %>
-  </div>
-  <div class="field">
-    <%= f.label :wepay_account_id %><br>
-    <%= f.number_field :wepay_account_id %>
   </div>
   <div class="actions">
     <%= f.submit %>

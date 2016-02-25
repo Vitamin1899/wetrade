@@ -28,6 +28,7 @@ class SellersController < ApplicationController
 
     respond_to do |format|
       if @seller.save
+        session[:seller_id] = @seller.id
         format.html { redirect_to @seller, notice: 'Seller was successfully created.' }
         format.json { render :show, status: :created, location: @seller }
       else

@@ -15,4 +15,12 @@ class Seller < ActiveRecord::Base
     self.password_hash = @password
   end
 
+  def self.authenticate(email, test_password)
+  seller = Seller.find_by_email(email)
+  if seller && seller.password == test_password
+    seller
+  else
+    nil
+  end
+end
 end

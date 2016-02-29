@@ -10,15 +10,24 @@ class SellersController < ApplicationController
   # GET /sellers/1
   # GET /sellers/1.json
   def show
+    @seller = Seller.find(params[:id])
+    @is_admin = current_user && current_user.id == @seller.id
   end
 
   # GET /sellers/new
   def new
+    if current_user
+      redirect_to root_path, :notice => "You are already registered"
+    end
     @seller = Seller.new
   end
 
   # GET /sellers/1/edit
   def edit
+    @seller = Seller.find(params[:id])
+    if current_user.id != @seller.id
+      redirect_to @seller
+    end
   end
 
   # POST /sellers

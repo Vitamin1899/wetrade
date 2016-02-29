@@ -25,5 +25,7 @@
   <%= @seller.produce_price %>
 </p>
 
-<%= link_to 'Edit', edit_seller_path(@seller) %> |
+<% if (@is_admin) %>
+<%= link_to 'Edit', edit_seller_path(@seller) %>
+<% end %> |
 <%= link_to 'Back', sellers_path %>

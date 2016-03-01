@@ -29,6 +29,8 @@ gem 'bcrypt', '~> 3.1.7'
 # Bootstrap integration
 gem 'bootstrap-sass', '~> 3.3.3'
 
+gem 'wepay'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 

@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   resources :sellers
 
   get 'welcome/index'
-  get 'register' => 'farmers#new', :as => :register
+  get 'register' => 'sellers#new', :as => :register
+  get '/sellers/:action(/:seller_id)', :controller => 'sellers'
 
   #session
   get '/login' => 'sessions#new', :as => :login

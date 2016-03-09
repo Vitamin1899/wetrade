@@ -88,8 +88,8 @@ class SellersController < ApplicationController
         return redirect_to('/')
       end
 
-      redirect_uri = url_for(:controller => 'farmers', :action => 'oauth', :farmer_id => params[:farmer_id], :host => request.host_with_port)
-      @farmer = Farmer.find(params[:farmer_id])
+      redirect_uri = url_for(:controller => 'sellers', :action => 'oauth', :seller_id => params[:seller_id], :host => request.host_with_port)
+      @seller = Seller.find(params[:seller_id])
       begin
         @farmer.request_wepay_access_token(params[:code], redirect_uri)
       rescue Exception => e
@@ -97,9 +97,9 @@ class SellersController < ApplicationController
       end
 
       if error
-        redirect_to @farmer, alert: error
+        redirect_to @seller, alert: error
       else
-        redirect_to @farmer, notice: 'We successfully connected you to WePay!'
+        redirect_to @seller, notice: 'We successfully connected you to WePay!'
       end
     end
 

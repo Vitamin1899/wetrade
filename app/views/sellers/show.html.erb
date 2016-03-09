@@ -1,5 +1,13 @@
 <p id="notice"><%= notice %></p>
 
+<% if (@is_admin && (!@seller.has_valid_wepay_access_token? || !@seller.has_wepay_account?)) %>
+  <p>
+    <b>Please create an account to manage your money: </b>
+  <% redirect_uri = url_for(:controller => 'sellers', :action => 'oauth', :seller_id => @seller.id, :host => request.host_with_port) %>
+    <a class="btn btn-primary" href="<%= @seller.wepay_authorization_url(redirect_uri) %>">Click here to create your account</a>
+  </p>
+<% end %>
+
 <p>
   <strong>Name:</strong>
   <%= @seller.name %>

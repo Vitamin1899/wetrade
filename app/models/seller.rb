@@ -42,7 +42,32 @@ class Seller < ActiveRecord::Base
     else
       self.wepay_access_token = response['access_token']
       self.save
+
+    #create WePay account
+      self.create_wepay_account
     end
+  end
+
+
+  def has_wepay_account?
+    self.wepay_account_id != 0 && !self.wepay_account_id.nil?
+  end
+
+  # creates a WePay account for this farmer with the farm's name
+  def create_wepay_account
+    if self.has_wepay_access_token? && !self.has_wepay_account?
+      params = { :name => self.firm, :description => "Selling " + self.produce }
+      response = Wetrade::Application::WEPAY.call("/account/create", self.wepay_access_token, params)
+
+      if response["account_id"]
+        self.wepay_account_id = response["account_id"]
+        return self.save
+      else
+        raise "Error - " + response["error_description"]
+      end
+
+    end
+    raise "Error - cannot create WePay account"
   end
 
   def has_wepay_access_token?

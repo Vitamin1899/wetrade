@@ -82,7 +82,7 @@ class SellersController < ApplicationController
       params.require(:seller).permit(:name, :email, :password, :firm, :produce, :produce_price, :wepay_access_token, :wepay_account_id)
     end
 
-    # GET /farmers/oauth/1
+    # GET /sellers/oauth/1
     def oauth
       if !params[:code]
         return redirect_to('/')
@@ -101,6 +101,29 @@ class SellersController < ApplicationController
       else
         redirect_to @seller, notice: 'We successfully connected you to WePay!'
       end
+    end
+
+    # GET /sellers/buy/1
+    def buy
+      redirect_uri = url_for(:controller => 'sellers', :action => 'payment_success', :seller_id => params[:seller_id], :host => request.host_with_port)
+      @seller = Seller.find(params[:farmer_id])
+      begin
+        @checkout = @seller.create_checkout(redirect_uri)
+      rescue Exception => e
+        redirect_to @seller, alert: e.message
+      end
+    end
+
+    # GET /sellers/payment_success/1
+    def payment_success
+      @seller = Seller.find(params[:seller_id])
+      if !params[:checkout_id]
+        return redirect_to @seller, alert: "Error - Checkout ID is expected"
+      end
+      if (params['error'] && params['error_description'])
+        return redirect_to @seller, alert: "Error - #{params['error_description']}"
+      end
+      redirect_to @seller, notice: "Thanks for the payment! You should receive a confirmation email shortly."
     end
 
 end

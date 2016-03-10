@@ -24,7 +24,7 @@ class Seller < ActiveRecord::Base
     end
   end
 
-  # get the authorization url for this farmer. This url will let the farmer
+  # get the authorization url for this seller. This url will let the seller
   # register or login to WePay to approve our app.
 
   # returns a url
@@ -32,7 +32,7 @@ class Seller < ActiveRecord::Base
     Wetrade::Application::WEPAY.oauth2_authorize_url(redirect_uri, self.email, self.name)
   end
 
-  # takes a code returned by wepay oauth2 authorization and makes an api call to generate oauth2 token for this farmer.
+  # takes a code returned by wepay oauth2 authorization and makes an api call to generate oauth2 token for this seller.
   def request_wepay_access_token(code, redirect_uri)
     response = Wetrade::Application::WEPAY.oauth2_token(code, redirect_uri)
     if response['error']
@@ -53,7 +53,7 @@ class Seller < ActiveRecord::Base
     self.wepay_account_id != 0 && !self.wepay_account_id.nil?
   end
 
-  # creates a WePay account for this farmer with the farm's name
+  # creates a WePay account for this seller with the farm's name
   def create_wepay_account
     if self.has_wepay_access_token? && !self.has_wepay_account?
       params = { :name => self.firm, :description => "Selling " + self.produce }
@@ -74,13 +74,44 @@ class Seller < ActiveRecord::Base
     !self.wepay_access_token.nil?
   end
 
-  # makes an api call to WePay to check if current access token for farmer is still valid
+  # makes an api call to WePay to check if current access token for seller is still valid
   def has_valid_wepay_access_token?
     if self.wepay_access_token.nil?
       return false
     end
     response = Wetrade::Application::WEPAY.call("/user", self.wepay_access_token)
     response && response["user_id"] ? true : false
+  end
+
+  # creates a checkout object using WePay API for this seller
+  def create_checkout(redirect_uri)
+    # calculate app_fee as 10% of produce price
+    app_fee = self.produce_price * 0.1
+
+    params = {
+      :account_id => self.wepay_account_id,
+      :short_description => "Produce sold by #{self.firm}",
+      :type => :GOODS,
+      :currency => 'USD',
+      :amount => self.produce_price,
+      :fee => {
+          :app_fee => app_fee,
+          :fee_payer => 'payee'
+      },
+      :hosted_checkout => {
+          :mode  => 'iframe',
+          :redirect_uri => redirect_uri
+      }
+    }
+    response = Wetrade::Application::WEPAY.call('/checkout/create', self.wepay_access_token, params)
+
+    if !response
+      raise "Error - no response from WePay"
+    elsif response['error']
+      raise "Error - " + response["error_description"]
+    end
+
+    return response
   end
 
 end

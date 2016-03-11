@@ -1,5 +1,12 @@
 <p id="notice"><%= notice %></p>
 
+<h1><%= @seller.firm %></h1>
+
+<% if (@seller.has_wepay_account? && !@is_admin) %>
+<br />
+<%= link_to "Buy #{@seller.produce} Now!", "/sellers/buy/#{@seller.id}", :class => 'btn btn-danger btn-large', :id => 'buy-now-button' %>
+<% end %>
+
 <% if (@is_admin && (!@seller.has_valid_wepay_access_token? || !@seller.has_wepay_account?)) %>
   <p>
     <b>Please create an account to manage your money: </b>
